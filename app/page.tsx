@@ -1,65 +1,84 @@
-import Image from "next/image";
+import Link from "next/link";
+import AdBanner from "@/components/AdBanner";
 
-export default function Home() {
+const FEATURES = [
+  {
+    href: "/numerology",
+    icon: "🔢",
+    title: "数秘術",
+    subtitle: "Numerology",
+    description: "生年月日と名前のひらがなから、あなたの「ライフパスナンバー」「表現数」「ソウルナンバー」を算出し、運命を紐解きます。",
+    color: "from-purple-500 to-indigo-600",
+  },
+  {
+    href: "/shichu-suimei",
+    icon: "🏮",
+    title: "四柱推命",
+    subtitle: "Shichu Suimei",
+    description: "生年月日時から命式を算出。年柱・月柱・日柱・時柱の四つの柱があなたの本質と運勢を映し出します。",
+    color: "from-red-500 to-orange-500",
+  },
+  {
+    href: "/angel-number",
+    icon: "👼",
+    title: "エンジェルナンバー",
+    subtitle: "Angel Number",
+    description: "111、222、777... 繰り返し目にする数字にはメッセージが込められています。天使からのサインを読み解きましょう。",
+    color: "from-pink-500 to-rose-500",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
+      {/* Hero */}
+      <section className="text-center space-y-6">
+        <div className="text-6xl">✨</div>
+        <h1 className="text-4xl font-bold text-indigo-900">星の導き</h1>
+        <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
+          数字と星があなたの運命を語りかける。<br />
+          無料で試せる本格占いで、あなたの本質と可能性を発見しましょう。
+        </p>
+        <Link
+          href="/numerology"
+          className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold px-8 py-3 rounded-full hover:shadow-lg hover:scale-105 transition-all"
+        >
+          今すぐ占う →
+        </Link>
+      </section>
+
+      <AdBanner format="horizontal" />
+
+      {/* Feature Cards */}
+      <section>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">占いメニュー</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {FEATURES.map((f) => (
+            <Link key={f.href} href={f.href} className="group block">
+              <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden h-full">
+                <div className={`bg-gradient-to-br ${f.color} p-6 text-white text-center`}>
+                  <div className="text-5xl mb-2">{f.icon}</div>
+                  <div className="text-xl font-bold">{f.title}</div>
+                  <div className="text-sm opacity-80">{f.subtitle}</div>
+                </div>
+                <div className="p-5 text-sm text-gray-600 leading-relaxed">{f.description}</div>
+              </div>
+            </Link>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
+
+      {/* About */}
+      <section className="bg-white rounded-2xl shadow-md p-8 text-center space-y-4">
+        <h2 className="text-xl font-bold text-gray-800">占いについて</h2>
+        <p className="text-gray-600 text-sm leading-relaxed max-w-2xl mx-auto">
+          「星の導き」は数秘術・四柱推命・エンジェルナンバーをブラウザ上で手軽に体験できる無料占いサービスです。
+          結果はエンターテインメントとしてお楽しみください。
+          重要な人生の決断は、専門の占い師や専門家にご相談されることをお勧めします。
+        </p>
+      </section>
+
+      <AdBanner format="horizontal" />
     </div>
   );
 }
