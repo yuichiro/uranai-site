@@ -1,5 +1,4 @@
 import Link from "next/link";
-import AdBanner from "@/components/AdBanner";
 
 const FEATURES = [
   {
@@ -47,8 +46,6 @@ export default function HomePage() {
         </Link>
       </section>
 
-      <AdBanner format="horizontal" />
-
       {/* Feature Cards */}
       <section>
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">占いメニュー</h2>
@@ -78,7 +75,6 @@ export default function HomePage() {
         </p>
       </section>
 
-      <AdBanner format="horizontal" />
     </div>
   );
 }

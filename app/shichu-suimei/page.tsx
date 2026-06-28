@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AdBanner from "@/components/AdBanner";
 import { calcShichu, dominantGokyo, GOKYO_DESCRIPTION, type Pillar, type Shichu } from "@/lib/shichu";
 
 export default function ShichuPage() {
@@ -26,7 +25,6 @@ export default function ShichuPage() {
         <p className="text-gray-600">生年月日時から命式を算出し、あなたの本質を読み解きます</p>
       </div>
 
-      <AdBanner format="horizontal" />
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-8 space-y-6">
         <div>
@@ -64,7 +62,6 @@ export default function ShichuPage() {
 
       {result && (
         <div className="space-y-6">
-          <AdBanner format="horizontal" />
 
           {/* 命式表 */}
           <div className="bg-white rounded-2xl shadow-md p-6">
@@ -96,7 +93,6 @@ export default function ShichuPage() {
             </div>
           )}
 
-          <AdBanner format="horizontal" />
         </div>
       )}
 

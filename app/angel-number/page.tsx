@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AdBanner from "@/components/AdBanner";
 import { ANGEL_NUMBERS, findAngelNumber, type AngelNumber } from "@/lib/angel";
 
 export default function AngelNumberPage() {
@@ -22,7 +21,6 @@ export default function AngelNumberPage() {
         <p className="text-gray-600">繰り返し目にする数字に込められた天使のメッセージを調べましょう</p>
       </div>
 
-      <AdBanner format="horizontal" />
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-8 space-y-4">
         <label className="block text-sm font-medium text-gray-700">気になる数字を入力</label>
@@ -52,9 +50,7 @@ export default function AngelNumberPage() {
 
       {result && result !== "notfound" && (
         <div className="space-y-4">
-          <AdBanner format="horizontal" />
           <AngelCard angel={result} />
-          <AdBanner format="horizontal" />
         </div>
       )}
 

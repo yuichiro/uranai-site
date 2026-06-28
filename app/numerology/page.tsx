@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AdBanner from "@/components/AdBanner";
 import { calcLifePathNumber, calcExpressionNumber, calcSoulNumber, NUMBER_MEANINGS } from "@/lib/numerology";
 
 interface Result {
@@ -40,7 +39,6 @@ export default function NumerologyPage() {
         <p className="text-gray-600">生年月日と名前から、あなたの運命数を読み解きます</p>
       </div>
 
-      <AdBanner format="horizontal" />
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-8 space-y-6">
         <div>
@@ -76,7 +74,6 @@ export default function NumerologyPage() {
 
       {result && (
         <div className="space-y-6">
-          <AdBanner format="horizontal" />
           <NumberCard
             label="ライフパスナンバー"
             number={result.lifePath}
@@ -92,7 +89,6 @@ export default function NumerologyPage() {
             number={result.soul}
             description="あなたの魂の奥深くにある欲求と動機を示します。名前の母音から算出されます。"
           />
-          <AdBanner format="horizontal" />
         </div>
       )}
 
