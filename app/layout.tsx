@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "星の導き｜数秘術・四柱推命・エンジェルナンバー",
   description: "生年月日と名前で運命を読み解く。数秘術・四柱推命・エンジェルナンバーの無料占いサイト。",
   keywords: "占い,数秘術,四柱推命,エンジェルナンバー,無料",
+  verification: {
+    google: "-gWNVl_9n8-mAmr_zJkq7PXMPIATTeZc89NIuOEufXU",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
