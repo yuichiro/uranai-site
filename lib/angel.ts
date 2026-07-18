@@ -25,3 +25,24 @@ export const ANGEL_NUMBERS: AngelNumber[] = [
 export function findAngelNumber(query: string): AngelNumber | undefined {
   return ANGEL_NUMBERS.find((a) => a.number === query.trim());
 }
+
+// ライフパスナンバー → あなた専用エンジェルナンバー
+const LIFE_PATH_TO_ANGEL: Record<number, string> = {
+  1: "111",
+  2: "222",
+  3: "333",
+  4: "444",
+  5: "555",
+  6: "666",
+  7: "777",
+  8: "888",
+  9: "999",
+  11: "1111",
+  22: "2222",
+  33: "333",
+};
+
+export function myAngelNumber(lifePath: number): AngelNumber | undefined {
+  const num = LIFE_PATH_TO_ANGEL[lifePath];
+  return num ? findAngelNumber(num) : undefined;
+}
