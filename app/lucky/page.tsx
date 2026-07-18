@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getDailyFortune, getJapaneseDate, type DailyFortune } from "@/lib/daily";
+import { rakutenSearchLink, COLOR_TO_STONE } from "@/lib/rakuten";
 
 function Stars({ count }: { count: number }) {
   return (
@@ -102,6 +103,37 @@ export default function LuckyPage() {
                   <div className="font-bold text-amber-700 mt-1">{item.value}</div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* 開運アイテム（アフィリエイト） */}
+          <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold text-gray-800">🔮 今日の開運アイテムを探す</h2>
+              <span className="text-xs text-gray-400 border border-gray-300 rounded px-1.5 py-0.5">PR</span>
+            </div>
+            <p className="text-sm text-gray-600">
+              今日のラッキーカラー「{result.luckyColor}」に対応するパワーストーンや開運グッズで、運気をさらに高めましょう。
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <a
+                href={rakutenSearchLink(COLOR_TO_STONE[result.luckyColor] ?? "パワーストーン ブレスレット")}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                className="block bg-amber-50 hover:bg-amber-100 rounded-xl p-4 transition-colors"
+              >
+                <div className="font-bold text-amber-800 text-sm">💎 {result.luckyColor}のパワーストーンを見る</div>
+                <div className="text-xs text-gray-500 mt-1">{COLOR_TO_STONE[result.luckyColor] ?? "パワーストーン"}（楽天市場）→</div>
+              </a>
+              <a
+                href={rakutenSearchLink(`開運 ${result.luckyItem}`)}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                className="block bg-amber-50 hover:bg-amber-100 rounded-xl p-4 transition-colors"
+              >
+                <div className="font-bold text-amber-800 text-sm">✨ ラッキーアイテム「{result.luckyItem}」を見る</div>
+                <div className="text-xs text-gray-500 mt-1">開運 {result.luckyItem}（楽天市場）→</div>
+              </a>
             </div>
           </div>
         </div>

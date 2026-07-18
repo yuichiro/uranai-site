@@ -48,22 +48,27 @@ export default function PrivacyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-bold text-gray-800">6. 第三者への提供</h2>
+          <h2 className="text-lg font-bold text-gray-800">6. アフィリエイトプログラムについて</h2>
+          <p>当サイトは、楽天アフィリエイトなどのアフィリエイトプログラムに参加しています。当サイト内の「PR」表記のあるリンクを経由して商品・サービスを購入された場合、当サイトに紹介料が支払われることがあります。商品の価格や品質等については、リンク先の販売店・サービス提供者にお問い合わせください。</p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-lg font-bold text-gray-800">7. 第三者への提供</h2>
           <p>当サイトは、法令に基づく場合を除き、ユーザーの個人情報を第三者に提供することはありません。</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-bold text-gray-800">7. 免責事項</h2>
+          <h2 className="text-lg font-bold text-gray-800">8. 免責事項</h2>
           <p>当サイトの占い結果はエンターテインメント目的のものであり、結果の正確性・完全性を保証するものではありません。占い結果を根拠とした行動により生じた損害について、当サイトは一切の責任を負いません。</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-bold text-gray-800">8. プライバシーポリシーの変更</h2>
+          <h2 className="text-lg font-bold text-gray-800">9. プライバシーポリシーの変更</h2>
           <p>当サイトは、必要に応じて本ポリシーを変更することがあります。変更後のポリシーは本ページに掲載した時点で効力を生じます。</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-bold text-gray-800">9. お問い合わせ</h2>
+          <h2 className="text-lg font-bold text-gray-800">10. お問い合わせ</h2>
           <p>本ポリシーに関するお問い合わせは、<a href="/contact" className="text-indigo-600 underline">お問い合わせページ</a>よりご連絡ください。</p>
         </section>
 
