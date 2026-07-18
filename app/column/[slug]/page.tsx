@@ -2,6 +2,7 @@ import { COLUMNS } from "../page";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { rakutenSearchLink, CATEGORY_TO_BOOK } from "@/lib/rakuten";
 
 export function generateStaticParams() {
   return COLUMNS.map((col) => ({ slug: col.slug }));
@@ -48,6 +49,23 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           }
           return <p key={i}>{p.replace(/\*\*(.+?)\*\*/g, "$1")}</p>;
         })}
+      </div>
+
+      {/* 関連書籍（アフィリエイト） */}
+      <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="font-bold text-gray-800">📖 もっと深く学びたい方へ</p>
+          <span className="text-xs text-gray-400 border border-gray-300 rounded px-1.5 py-0.5">PR</span>
+        </div>
+        <p className="text-sm text-gray-600">{col.category}をより詳しく学べる書籍を楽天ブックスで探せます。</p>
+        <a
+          href={rakutenSearchLink(CATEGORY_TO_BOOK[col.category] ?? "占い 本")}
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          className="block bg-indigo-50 hover:bg-indigo-100 rounded-xl p-4 transition-colors"
+        >
+          <div className="font-bold text-indigo-800 text-sm">{col.category}の関連書籍を見る（楽天市場）→</div>
+        </a>
       </div>
 
       <div className="flex justify-between">

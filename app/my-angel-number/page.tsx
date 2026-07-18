@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { calcLifePathNumber } from "@/lib/numerology";
 import { myAngelNumber, type AngelNumber } from "@/lib/angel";
+import { rakutenSearchLink, ANGEL_TO_STONE } from "@/lib/rakuten";
 
 interface Result {
   lifePath: number;
@@ -80,6 +81,28 @@ export default function MyAngelNumberPage() {
                 ※ ライフパスナンバー{result.lifePath}に対応するエンジェルナンバーです。この数字を日常で見かけたら、天使からの特別なメッセージと受け取ってください。
               </p>
             </div>
+          </div>
+
+          {/* 守護ストーン（アフィリエイト） */}
+          <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="font-bold text-gray-800">💎 あなたの守護ストーン</p>
+              <span className="text-xs text-gray-400 border border-gray-300 rounded px-1.5 py-0.5">PR</span>
+            </div>
+            <p className="text-sm text-gray-600">
+              エンジェルナンバー{result.angel.number}と相性の良いパワーストーンは「{(ANGEL_TO_STONE[result.angel.number] ?? "水晶").split(" ")[0]}」。
+              身につけることで天使のメッセージを受け取りやすくなるといわれています。
+            </p>
+            <a
+              href={rakutenSearchLink(ANGEL_TO_STONE[result.angel.number] ?? "パワーストーン ブレスレット")}
+              target="_blank"
+              rel="nofollow sponsored noopener"
+              className="block bg-pink-50 hover:bg-pink-100 rounded-xl p-4 transition-colors"
+            >
+              <div className="font-bold text-pink-800 text-sm">
+                {(ANGEL_TO_STONE[result.angel.number] ?? "水晶").split(" ")[0]}のブレスレットを見る（楽天市場）→
+              </div>
+            </a>
           </div>
 
           {/* シェア */}
