@@ -8,6 +8,7 @@ const FEATURES = [
   { href: "/angel-number", icon: "👼", title: "エンジェルナンバー", subtitle: "Angel Number", description: "111、222、777… 繰り返し目にする数字に込められた天使のメッセージを読み解きます。", color: "from-pink-500 to-rose-500" },
   { href: "/compatibility", icon: "💑", title: "相性占い", subtitle: "Compatibility", description: "二人の生年月日から数秘術と四柱推命で相性を診断します。", color: "from-rose-400 to-pink-500" },
   { href: "/my-angel-number", icon: "🕊️", title: "あなた専用エンジェルナンバー", subtitle: "My Angel Number", description: "生年月日から、あなたが生まれ持った守護エンジェルナンバーを診断します。", color: "from-fuchsia-500 to-pink-500" },
+  { href: "/angel-compatibility", icon: "👼", title: "エンジェルナンバー相性", subtitle: "Angel Compatibility", description: "二人がよく見るエンジェルナンバーから、天使が示す相性を診断します。", color: "from-pink-400 to-fuchsia-500" },
 ];
 
 export default function HomePage() {

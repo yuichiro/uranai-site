@@ -21,12 +21,20 @@ export default function AngelNumberPage() {
         <p className="text-gray-600">繰り返し目にする数字に込められた天使のメッセージを調べましょう</p>
       </div>
 
-      <a
-        href="/my-angel-number"
-        className="block bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white rounded-2xl shadow-md p-5 text-center font-bold hover:shadow-lg transition-all"
-      >
-        🕊️ 生年月日から「あなた専用エンジェルナンバー」を診断する →
-      </a>
+      <div className="grid sm:grid-cols-2 gap-3">
+        <a
+          href="/my-angel-number"
+          className="block bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white rounded-2xl shadow-md p-5 text-center font-bold hover:shadow-lg transition-all"
+        >
+          🕊️ あなた専用エンジェルナンバー診断 →
+        </a>
+        <a
+          href="/angel-compatibility"
+          className="block bg-gradient-to-r from-pink-400 to-fuchsia-500 text-white rounded-2xl shadow-md p-5 text-center font-bold hover:shadow-lg transition-all"
+        >
+          👼💕 エンジェルナンバー相性診断 →
+        </a>
+      </div>
 
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-8 space-y-4">

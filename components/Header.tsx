@@ -6,6 +6,7 @@ const NAV = [
   { href: "/numerology", label: "数秘術" },
   { href: "/shichu-suimei", label: "四柱推命" },
   { href: "/angel-number", label: "エンジェルナンバー" },
+  { href: "/angel-compatibility", label: "エンジェル相性" },
   { href: "/compatibility", label: "相性占い" },
   { href: "/column", label: "コラム" },
 ];
