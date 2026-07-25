@@ -9,6 +9,7 @@ const FEATURES = [
   { href: "/compatibility", icon: "💑", title: "相性占い", subtitle: "Compatibility", description: "二人の生年月日から数秘術と四柱推命で相性を診断します。", color: "from-rose-400 to-pink-500" },
   { href: "/my-angel-number", icon: "🕊️", title: "あなた専用エンジェルナンバー", subtitle: "My Angel Number", description: "生年月日から、あなたが生まれ持った守護エンジェルナンバーを診断します。", color: "from-fuchsia-500 to-pink-500" },
   { href: "/angel-compatibility", icon: "👼", title: "エンジェルナンバー相性", subtitle: "Angel Compatibility", description: "二人がよく見るエンジェルナンバーから、天使が示す相性を診断します。", color: "from-pink-400 to-fuchsia-500" },
+  { href: "/today-angel-number", icon: "🔮", title: "今日のエンジェルナンバー", subtitle: "Today's Angel Number", description: "毎日変わる、今日あなたに届く天使からのメッセージをチェック。", color: "from-violet-400 to-fuchsia-500" },
 ];
 
 export default function HomePage() {
