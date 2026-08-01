@@ -56,7 +56,8 @@ export default function LuckyPage() {
             <p className="text-sm text-amber-600 font-medium">{getJapaneseDate()}の運勢</p>
             <div className="text-4xl font-bold text-amber-700">総合運</div>
             <div className="text-3xl"><Stars count={result.overall} /></div>
-            <p className="text-gray-700 leading-relaxed mt-4">{result.message}</p>
+            <p className="text-amber-800 font-medium mt-2">{result.overallComment}</p>
+            <p className="text-gray-700 leading-relaxed mt-2">{result.message}</p>
           </div>
 
           {/* 運勢詳細 */}
@@ -75,7 +76,7 @@ export default function LuckyPage() {
             ))}
           </div>
 
-          {/* 恋愛・仕事メッセージ */}
+          {/* 各運勢のアドバイス */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="bg-pink-50 rounded-xl p-5 space-y-2">
               <div className="font-bold text-pink-700">💕 恋愛アドバイス</div>
@@ -85,6 +86,20 @@ export default function LuckyPage() {
               <div className="font-bold text-blue-700">💼 仕事アドバイス</div>
               <p className="text-sm text-gray-700">{result.workMessage}</p>
             </div>
+            <div className="bg-yellow-50 rounded-xl p-5 space-y-2">
+              <div className="font-bold text-yellow-700">💰 金運アドバイス</div>
+              <p className="text-sm text-gray-700">{result.moneyMessage}</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-5 space-y-2">
+              <div className="font-bold text-green-700">🌿 健康アドバイス</div>
+              <p className="text-sm text-gray-700">{result.healthMessage}</p>
+            </div>
+          </div>
+
+          {/* 今日のラッキーアクション */}
+          <div className="bg-gradient-to-r from-amber-400 to-yellow-400 rounded-2xl shadow-md p-6 text-white text-center space-y-1">
+            <div className="text-sm font-medium opacity-90">🌟 今日のラッキーアクション</div>
+            <p className="text-lg font-bold">{result.luckyAction}</p>
           </div>
 
           {/* ラッキー情報 */}
@@ -136,6 +151,31 @@ export default function LuckyPage() {
               </a>
             </div>
           </div>
+
+          {/* シェア */}
+          <div className="bg-white rounded-2xl shadow-md p-6 text-center space-y-4">
+            <p className="text-sm font-medium text-gray-700">今日の運勢をシェアする</p>
+            <div className="flex justify-center gap-3 flex-wrap">
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`今日の総合運は${"★".repeat(result.overall)}${"☆".repeat(5 - result.overall)}✨ ラッキーカラーは「${result.luckyColor}」、ラッキーアクションは「${result.luckyAction}」でした！`)}&url=${encodeURIComponent("https://uranai.moritaro.com/lucky")}&hashtags=${encodeURIComponent("今日の運勢,星の導き")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-black text-white font-bold px-6 py-2 rounded-full hover:opacity-80 transition-opacity"
+              >
+                𝕏 でシェア
+              </a>
+              <a
+                href="/today-angel-number"
+                className="bg-fuchsia-500 text-white font-bold px-6 py-2 rounded-full hover:shadow-md transition-all"
+              >
+                👼 今日のエンジェルナンバーも見る
+              </a>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-gray-400">
+            明日はまた違う運勢が届きます。毎朝のルーティンにどうぞ。
+          </p>
         </div>
       )}
 
@@ -143,8 +183,11 @@ export default function LuckyPage() {
         <section className="bg-white rounded-2xl shadow-md p-8 space-y-3">
           <h2 className="text-lg font-bold text-gray-800">今日の運勢とは？</h2>
           <p className="text-sm text-gray-600 leading-relaxed">
-            数秘術をベースに、あなたの生年月日と今日の日付から運勢を算出します。
-            毎日結果が変わるので、朝のルーティンとしてチェックしてみてください。
+            「今日の運勢」は、数秘術をベースにあなたの生年月日と今日の日付から、
+            総合運・恋愛運・仕事運・金運・健康運の5つを星の数で占います。
+            さらに、その日のラッキーカラー・ラッキーナンバー・ラッキーアイテム・ラッキー方位、
+            そして開運につながる「今日のラッキーアクション」までお届け。
+            結果は毎日変わるので、朝のルーティンとして今日一日の指針にしてみてください。
           </p>
         </section>
       )}
