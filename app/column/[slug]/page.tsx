@@ -2,7 +2,9 @@ import { COLUMNS } from "../page";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { rakutenSearchLink, CATEGORY_TO_BOOK } from "@/lib/rakuten";
+import { rakutenSearchLink, CATEGORY_TO_BOOK, ANGEL_TO_STONE } from "@/lib/rakuten";
+
+const SITE_URL = "https://uranai.moritaro.com";
 
 export function generateStaticParams() {
   return COLUMNS.map((col) => ({ slug: col.slug }));
@@ -12,7 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const col = COLUMNS.find((c) => c.slug === slug);
   if (!col) return {};
-  return { title: `${col.title}｜星の導き`, description: col.excerpt };
+  const url = `${SITE_URL}/column/${col.slug}`;
+  return {
+    title: col.title,
+    description: col.excerpt,
+    alternates: { canonical: url },
+    openGraph: { title: col.title, description: col.excerpt, url, type: "article", siteName: "星の導き" },
+    twitter: { card: "summary", title: col.title, description: col.excerpt },
+  };
 }
 
 export default async function ColumnPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -22,8 +31,41 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
 
   const paragraphs = col.body.split("\n\n");
 
+  // 同じカテゴリの関連コラム（内部リンク：順位向上と回遊のため）
+  const related = COLUMNS.filter((c) => c.category === col.category && c.slug !== col.slug).slice(0, 6);
+
+  // エンジェルナンバー記事 → 番号に対応する守護ストーン（アフィリ）
+  const angelNum = col.slug.startsWith("angel-") ? col.slug.replace("angel-", "") : "";
+  const stoneKeyword = ANGEL_TO_STONE[angelNum];
+
+  // 構造化データ（JSON-LD）
+  const pageUrl = `${SITE_URL}/column/${col.slug}`;
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: col.title,
+    description: col.excerpt,
+    mainEntityOfPage: pageUrl,
+    url: pageUrl,
+    inLanguage: "ja",
+    articleSection: col.category,
+    author: { "@type": "Organization", name: "星の導き" },
+    publisher: { "@type": "Organization", name: "星の導き" },
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "コラム", item: `${SITE_URL}/column` },
+      { "@type": "ListItem", position: 3, name: col.title, item: pageUrl },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 space-y-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <div className="space-y-3">
         <span className={`text-xs font-bold px-2 py-1 rounded-full ${col.color}`}>{col.category}</span>
         <h1 className="text-2xl font-bold text-gray-800 leading-tight">{col.title}</h1>
@@ -63,6 +105,25 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
         })}
       </div>
 
+      {/* 守護ストーン（エンジェルナンバー記事のアフィリエイト） */}
+      {stoneKeyword && (
+        <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="font-bold text-gray-800">💎 このナンバーの守護ストーン</p>
+            <span className="text-xs text-gray-400 border border-gray-300 rounded px-1.5 py-0.5">PR</span>
+          </div>
+          <p className="text-sm text-gray-600">エンジェルナンバー{angelNum}のエネルギーを高めるパワーストーンを楽天市場で探せます。</p>
+          <a
+            href={rakutenSearchLink(stoneKeyword)}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="block bg-pink-50 hover:bg-pink-100 rounded-xl p-4 transition-colors"
+          >
+            <div className="font-bold text-pink-800 text-sm">{stoneKeyword}を見る（楽天市場）→</div>
+          </a>
+        </div>
+      )}
+
       {/* 関連書籍（アフィリエイト） */}
       <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
         <div className="flex items-center justify-between">
@@ -83,6 +144,22 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
       <div className="flex justify-between">
         <Link href="/column" className="text-sm text-indigo-600 hover:underline">← コラム一覧に戻る</Link>
       </div>
+
+      {/* 関連コラムへの内部リンク（順位向上・回遊のため） */}
+      {related.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+          <p className="font-bold text-gray-800">🔗 関連するコラム</p>
+          <ul className="space-y-2">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link href={`/column/${r.slug}`} className="text-indigo-600 hover:underline text-sm">
+                  {r.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* 関連占いへの誘導 */}
       <div className="bg-indigo-50 rounded-2xl p-6 space-y-3">
