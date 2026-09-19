@@ -16,7 +16,9 @@ export async function fetchAiReadings(): Promise<Record<string, AiReading> | nul
     const res = await fetch("/data/angel-readings.json", { cache: "force-cache" });
     if (!res.ok) return null;
     const data = await res.json();
-    return (data?.readings as Record<string, AiReading>) ?? null;
+    // スタブ（実生成前のプレースホルダ）は使わず、既存の固定文にフォールバックさせる
+    if (!data || data.model === "stub" || !data.readings) return null;
+    return data.readings as Record<string, AiReading>;
   } catch {
     return null;
   }
