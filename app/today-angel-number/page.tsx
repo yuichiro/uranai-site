@@ -3,13 +3,20 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getDailyAngel, type DailyAngel } from "@/lib/dailyAngel";
+import { fetchAiReadings, type AiReading } from "@/lib/aiReadings";
 
 export default function TodayAngelNumberPage() {
   const [daily, setDaily] = useState<DailyAngel | null>(null);
+  const [ai, setAi] = useState<AiReading | null>(null);
 
   useEffect(() => {
     // 閲覧時の日付で「今日のエンジェルナンバー」を算出（毎日変わる）
-    setDaily(getDailyAngel());
+    const d = getDailyAngel();
+    setDaily(d);
+    // AIパーソナライズ鑑定文を読み込み（無ければ固定文にフォールバック）
+    fetchAiReadings().then((r) => {
+      if (r && r[d.angel.number]) setAi(r[d.angel.number]);
+    });
   }, []);
 
   const shareText = daily
@@ -41,20 +48,32 @@ export default function TodayAngelNumberPage() {
               <div className="text-xl font-bold">{daily.angel.title}</div>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-gray-700 leading-relaxed">{daily.angel.message}</p>
+              <p className="text-gray-700 leading-relaxed">{ai?.intro ?? daily.angel.message}</p>
               <div className="bg-amber-50 rounded-xl p-4">
                 <div className="text-xs font-bold text-amber-600 mb-1">🌟 今日のヒント</div>
-                <p className="text-sm text-gray-700">{daily.hint}</p>
+                <p className="text-sm text-gray-700">{ai?.action ?? daily.hint}</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="bg-pink-50 rounded-xl p-4">
                   <div className="text-xs font-bold text-pink-600 mb-1">💕 恋愛・人間関係</div>
-                  <p className="text-sm text-gray-700">{daily.angel.love}</p>
+                  <p className="text-sm text-gray-700">{ai?.love ?? daily.angel.love}</p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-4">
                   <div className="text-xs font-bold text-blue-600 mb-1">💼 仕事・目標</div>
-                  <p className="text-sm text-gray-700">{daily.angel.work}</p>
+                  <p className="text-sm text-gray-700">{ai?.work ?? daily.angel.work}</p>
                 </div>
+                {ai && (
+                  <>
+                    <div className="bg-yellow-50 rounded-xl p-4">
+                      <div className="text-xs font-bold text-yellow-700 mb-1">💰 金運</div>
+                      <p className="text-sm text-gray-700">{ai.money}</p>
+                    </div>
+                    <div className="bg-green-50 rounded-xl p-4">
+                      <div className="text-xs font-bold text-green-700 mb-1">🌿 心身のケア</div>
+                      <p className="text-sm text-gray-700">{ai.health}</p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

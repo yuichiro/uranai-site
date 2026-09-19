@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI生成物（実生成時に -f で明示追加）
+public/data/angel-readings.json
