@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { calcLifePathNumber } from "@/lib/numerology";
 import { myAngelNumber, type AngelNumber } from "@/lib/angel";
 import { rakutenSearchLink, ANGEL_TO_STONE } from "@/lib/rakuten";
+import { fetchAiReadings, type AiReading } from "@/lib/aiReadings";
 
 interface Result {
   lifePath: number;
@@ -14,6 +15,14 @@ interface Result {
 export default function MyAngelNumberPage() {
   const [birthdate, setBirthdate] = useState("");
   const [result, setResult] = useState<Result | null>(null);
+  const [aiReadings, setAiReadings] = useState<Record<string, AiReading> | null>(null);
+
+  useEffect(() => {
+    // AIパーソナライズ鑑定文を先読み（無ければ固定文にフォールバック）
+    fetchAiReadings().then(setAiReadings);
+  }, []);
+
+  const ai = result ? aiReadings?.[result.angel.number] ?? null : null;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,17 +75,35 @@ export default function MyAngelNumberPage() {
               <div className="text-xl font-bold">{result.angel.title}</div>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-gray-700 leading-relaxed">{result.angel.message}</p>
+              <p className="text-gray-700 leading-relaxed">{ai?.intro ?? result.angel.message}</p>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="bg-pink-50 rounded-xl p-4">
                   <div className="text-xs font-bold text-pink-600 mb-1">💕 恋愛・人間関係</div>
-                  <p className="text-sm text-gray-700">{result.angel.love}</p>
+                  <p className="text-sm text-gray-700">{ai?.love ?? result.angel.love}</p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-4">
                   <div className="text-xs font-bold text-blue-600 mb-1">💼 仕事・目標</div>
-                  <p className="text-sm text-gray-700">{result.angel.work}</p>
+                  <p className="text-sm text-gray-700">{ai?.work ?? result.angel.work}</p>
                 </div>
+                {ai && (
+                  <>
+                    <div className="bg-yellow-50 rounded-xl p-4">
+                      <div className="text-xs font-bold text-yellow-700 mb-1">💰 金運</div>
+                      <p className="text-sm text-gray-700">{ai.money}</p>
+                    </div>
+                    <div className="bg-green-50 rounded-xl p-4">
+                      <div className="text-xs font-bold text-green-700 mb-1">🌿 心身のケア</div>
+                      <p className="text-sm text-gray-700">{ai.health}</p>
+                    </div>
+                  </>
+                )}
               </div>
+              {ai && (
+                <div className="bg-fuchsia-50 rounded-xl p-4">
+                  <div className="text-xs font-bold text-fuchsia-700 mb-1">🌟 あなたへの今日の一歩</div>
+                  <p className="text-sm text-gray-700">{ai.action}</p>
+                </div>
+              )}
               <p className="text-xs text-gray-500">
                 ※ ライフパスナンバー{result.lifePath}に対応するエンジェルナンバーです。この数字を日常で見かけたら、天使からの特別なメッセージと受け取ってください。
               </p>

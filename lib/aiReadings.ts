@@ -13,7 +13,10 @@ export interface AiReading {
 
 export async function fetchAiReadings(): Promise<Record<string, AiReading> | null> {
   try {
-    const res = await fetch("/data/angel-readings.json", { cache: "force-cache" });
+    // 日付をクエリに付けて「その日のうちはキャッシュ・日が変われば最新取得」にする
+    // （生成物を更新しても古い版が居座らないようにするため）
+    const day = new Date().toISOString().slice(0, 10);
+    const res = await fetch(`/data/angel-readings.json?d=${day}`, { cache: "force-cache" });
     if (!res.ok) return null;
     const data = await res.json();
     // スタブ（実生成前のプレースホルダ）は使わず、既存の固定文にフォールバックさせる
