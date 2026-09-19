@@ -1,0 +1,55 @@
+name: Generate AI fortunes
+
+# AIパーソナライズ鑑定文を定期生成し、変化があれば自動コミット→Vercel自動デプロイ。
+# 手動実行（workflow_dispatch）でもいつでも回せる。
+on:
+  schedule:
+    # 毎週月曜 00:00 UTC（＝日本時間 月曜 09:00）
+    # 毎日にしたい場合は下行を "0 0 * * *" に変更
+    - cron: "0 0 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate readings
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-fortunes.mjs
+
+      - name: Guard against stub (APIキー未設定/失敗時は本物を上書きしない)
+        run: |
+          MODEL=$(node -e "console.log(require('./public/data/angel-readings.json').model)")
+          echo "生成モデル: $MODEL"
+          if [ "$MODEL" = "stub" ]; then
+            echo "::error::スタブが生成されました。ANTHROPIC_API_KEY のSecret設定を確認してください。コミットせず終了します。"
+            exit 1
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f public/data/angel-readings.json
+          if git diff --staged --quiet; then
+            echo "変更なし（スキップ）"
+          else
+            git commit -m "chore: refresh AI fortunes"
+            git push
+          fi
