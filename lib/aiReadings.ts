@@ -11,6 +11,29 @@ export interface AiReading {
   action: string;
 }
 
+// 「今日の運勢」用: ライフパスナンバー別のAI鑑定文
+export interface DailyFortuneText {
+  overall: string;
+  love: string;
+  work: string;
+  money: string;
+  health: string;
+  action: string;
+}
+
+export async function fetchDailyFortunes(): Promise<Record<string, DailyFortuneText> | null> {
+  try {
+    const day = new Date().toISOString().slice(0, 10);
+    const res = await fetch(`/data/daily-fortunes.json?d=${day}`, { cache: "force-cache" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.model === "stub" || !data.fortunes) return null;
+    return data.fortunes as Record<string, DailyFortuneText>;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchAiReadings(): Promise<Record<string, AiReading> | null> {
   try {
     // 日付をクエリに付けて「その日のうちはキャッシュ・日が変われば最新取得」にする

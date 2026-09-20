@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getDailyFortune, getJapaneseDate, type DailyFortune } from "@/lib/daily";
 import { rakutenSearchLink, COLOR_TO_STONE } from "@/lib/rakuten";
+import { fetchDailyFortunes, type DailyFortuneText } from "@/lib/aiReadings";
 
 function Stars({ count }: { count: number }) {
   return (
@@ -17,6 +18,14 @@ function Stars({ count }: { count: number }) {
 export default function LuckyPage() {
   const [birthdate, setBirthdate] = useState("");
   const [result, setResult] = useState<DailyFortune | null>(null);
+  const [fortunes, setFortunes] = useState<Record<string, DailyFortuneText> | null>(null);
+
+  useEffect(() => {
+    // 今日のAI運勢文を先読み（無ければ固定文にフォールバック）
+    fetchDailyFortunes().then(setFortunes);
+  }, []);
+
+  const ai = result ? fortunes?.[String(result.lifePathNumber)] ?? null : null;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,7 +66,7 @@ export default function LuckyPage() {
             <div className="text-4xl font-bold text-amber-700">総合運</div>
             <div className="text-3xl"><Stars count={result.overall} /></div>
             <p className="text-amber-800 font-medium mt-2">{result.overallComment}</p>
-            <p className="text-gray-700 leading-relaxed mt-2">{result.message}</p>
+            <p className="text-gray-700 leading-relaxed mt-2">{ai?.overall ?? result.message}</p>
           </div>
 
           {/* 運勢詳細 */}
@@ -80,26 +89,26 @@ export default function LuckyPage() {
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="bg-pink-50 rounded-xl p-5 space-y-2">
               <div className="font-bold text-pink-700">💕 恋愛アドバイス</div>
-              <p className="text-sm text-gray-700">{result.loveMessage}</p>
+              <p className="text-sm text-gray-700">{ai?.love ?? result.loveMessage}</p>
             </div>
             <div className="bg-blue-50 rounded-xl p-5 space-y-2">
               <div className="font-bold text-blue-700">💼 仕事アドバイス</div>
-              <p className="text-sm text-gray-700">{result.workMessage}</p>
+              <p className="text-sm text-gray-700">{ai?.work ?? result.workMessage}</p>
             </div>
             <div className="bg-yellow-50 rounded-xl p-5 space-y-2">
               <div className="font-bold text-yellow-700">💰 金運アドバイス</div>
-              <p className="text-sm text-gray-700">{result.moneyMessage}</p>
+              <p className="text-sm text-gray-700">{ai?.money ?? result.moneyMessage}</p>
             </div>
             <div className="bg-green-50 rounded-xl p-5 space-y-2">
               <div className="font-bold text-green-700">🌿 健康アドバイス</div>
-              <p className="text-sm text-gray-700">{result.healthMessage}</p>
+              <p className="text-sm text-gray-700">{ai?.health ?? result.healthMessage}</p>
             </div>
           </div>
 
           {/* 今日のラッキーアクション */}
           <div className="bg-gradient-to-r from-amber-400 to-yellow-400 rounded-2xl shadow-md p-6 text-white text-center space-y-1">
             <div className="text-sm font-medium opacity-90">🌟 今日のラッキーアクション</div>
-            <p className="text-lg font-bold">{result.luckyAction}</p>
+            <p className="text-lg font-bold">{ai?.action ?? result.luckyAction}</p>
           </div>
 
           {/* ラッキー情報 */}
