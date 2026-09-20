@@ -21,7 +21,7 @@ export default function ShichuPage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">🏮</div>
-        <h1 className="text-3xl font-bold text-red-800">四柱推命</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-red-800">四柱推命</h1>
         <p className="text-gray-600">生年月日時から命式を算出し、あなたの本質を読み解きます</p>
       </div>
 

@@ -33,7 +33,7 @@ export default function HoroscopePage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">⭐</div>
-        <h1 className="text-3xl font-bold text-indigo-800">星座占い</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-indigo-800">星座占い</h1>
         <p className="text-gray-600">{weekLabel}の運勢</p>
       </div>
 

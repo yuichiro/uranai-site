@@ -13,7 +13,7 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-indigo-900 mb-8">お問い合わせ</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-indigo-900 mb-8">お問い合わせ</h1>
 
       {submitted ? (
         <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center space-y-3">

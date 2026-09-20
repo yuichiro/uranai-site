@@ -30,7 +30,7 @@ export default function TodayAngelNumberPage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">🔮👼</div>
-        <h1 className="text-3xl font-bold text-pink-700">今日のエンジェルナンバー</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-pink-700">今日のエンジェルナンバー</h1>
         <p className="text-gray-600">毎日変わる、今日あなたに届く天使からのメッセージ</p>
       </div>
 

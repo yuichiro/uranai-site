@@ -28,7 +28,7 @@ export default function LuckyPage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">🌟</div>
-        <h1 className="text-3xl font-bold text-amber-700">今日の運勢</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-amber-700">今日の運勢</h1>
         <p className="text-gray-600">生年月日から今日のあなたの運勢を占います</p>
       </div>
 

@@ -43,7 +43,7 @@ export default function MyAngelNumberPage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">🕊️</div>
-        <h1 className="text-3xl font-bold text-pink-700">あなた専用エンジェルナンバー診断</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-pink-700">あなた専用エンジェルナンバー診断</h1>
         <p className="text-gray-600">
           生年月日から、あなたが生まれ持った「守護エンジェルナンバー」を算出します
         </p>

@@ -35,7 +35,7 @@ export default function NumerologyPage() {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
       <div className="text-center space-y-2">
         <div className="text-5xl">🔢</div>
-        <h1 className="text-3xl font-bold text-indigo-900">数秘術</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-indigo-900">数秘術</h1>
         <p className="text-gray-600">生年月日と名前から、あなたの運命数を読み解きます</p>
       </div>
 
