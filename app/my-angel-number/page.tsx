@@ -6,6 +6,7 @@ import { calcLifePathNumber } from "@/lib/numerology";
 import { myAngelNumber, type AngelNumber } from "@/lib/angel";
 import { rakutenSearchLink, ANGEL_TO_STONE } from "@/lib/rakuten";
 import { fetchAiReadings, type AiReading } from "@/lib/aiReadings";
+import { LINE_ADD_FRIEND_URL } from "@/lib/line";
 
 interface Result {
   lifePath: number;
@@ -129,6 +130,20 @@ export default function MyAngelNumberPage() {
               <div className="font-bold text-pink-800 text-sm">
                 {(ANGEL_TO_STONE[result.angel.number] ?? "水晶").split(" ")[0]}のブレスレットを見る（楽天市場）→
               </div>
+            </a>
+          </div>
+
+          {/* LINE友だち追加 */}
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-md p-6 text-white text-center space-y-3">
+            <p className="font-bold text-lg">📱 毎朝の運勢をLINEで受け取る</p>
+            <p className="text-sm opacity-90">友だち追加すると、今日のエンジェルナンバーが毎日届きます</p>
+            <a
+              href={LINE_ADD_FRIEND_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-green-600 font-bold px-8 py-3 rounded-full hover:shadow-lg hover:scale-105 transition-all"
+            >
+              LINEで友だち追加する →
             </a>
           </div>
 

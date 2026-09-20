@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getDailyAngel, type DailyAngel } from "@/lib/dailyAngel";
 import { fetchAiReadings, type AiReading } from "@/lib/aiReadings";
+import { LINE_ADD_FRIEND_URL } from "@/lib/line";
 
 export default function TodayAngelNumberPage() {
   const [daily, setDaily] = useState<DailyAngel | null>(null);
@@ -76,6 +77,20 @@ export default function TodayAngelNumberPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* LINE友だち追加（毎朝配信で習慣化） */}
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-md p-6 text-white text-center space-y-3">
+            <p className="font-bold text-lg">📱 毎朝、今日のエンジェルナンバーをLINEで</p>
+            <p className="text-sm opacity-90">友だち追加すると、毎日あなたに届く天使のメッセージを受け取れます</p>
+            <a
+              href={LINE_ADD_FRIEND_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-green-600 font-bold px-8 py-3 rounded-full hover:shadow-lg hover:scale-105 transition-all"
+            >
+              LINEで友だち追加する →
+            </a>
           </div>
 
           {/* シェア */}
