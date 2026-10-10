@@ -1,195 +1,61 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { calcLifePathNumber } from "@/lib/numerology";
-import { myAngelNumber, type AngelNumber } from "@/lib/angel";
-import { rakutenSearchLink, ANGEL_TO_STONE } from "@/lib/rakuten";
-import { fetchAiReadings, type AiReading } from "@/lib/aiReadings";
-import { LINE_ADD_FRIEND_URL } from "@/lib/line";
+import MyAngelClient from "./MyAngelClient";
+import { getAngelReadings } from "@/lib/serverData";
+import { myAngelNumber } from "@/lib/angel";
 
-interface Result {
-  lifePath: number;
-  angel: AngelNumber;
-}
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "あなた専用エンジェルナンバー診断｜生年月日でわかる守護ナンバー（無料）",
+  description:
+    "生年月日から数秘術のライフパスナンバーを求め、あなたが生まれ持った「守護エンジェルナンバー」を無料で診断。ライフパス別に恋愛・仕事・金運のメッセージを解説します。",
+  alternates: { canonical: "https://uranai.moritaro.com/my-angel-number" },
+};
+
+const LIFE_PATHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33];
 
 export default function MyAngelNumberPage() {
-  const [birthdate, setBirthdate] = useState("");
-  const [result, setResult] = useState<Result | null>(null);
-  const [aiReadings, setAiReadings] = useState<Record<string, AiReading> | null>(null);
-
-  useEffect(() => {
-    // AIパーソナライズ鑑定文を先読み（無ければ固定文にフォールバック）
-    fetchAiReadings().then(setAiReadings);
-  }, []);
-
-  const ai = result ? aiReadings?.[result.angel.number] ?? null : null;
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!birthdate) return;
-    const lifePath = calcLifePathNumber(birthdate);
-    const angel = myAngelNumber(lifePath);
-    if (angel) setResult({ lifePath, angel });
-  }
-
-  const shareText = result
-    ? `私のエンジェルナンバーは「${result.angel.number}」（${result.angel.title}）でした✨ あなたの数字も調べてみて！`
-    : "";
-  const shareUrl = "https://uranai.moritaro.com/my-angel-number";
-  const twitterHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${encodeURIComponent("エンジェルナンバー,星の導き")}`;
+  const readings = getAngelReadings();
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
-      <div className="text-center space-y-2">
-        <div className="text-5xl">🕊️</div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-pink-700">あなた専用エンジェルナンバー診断</h1>
-        <p className="text-gray-600">
-          生年月日から、あなたが生まれ持った「守護エンジェルナンバー」を算出します
+    <>
+      <MyAngelClient aiReadings={readings} />
+
+      {/* ライフパス別の守護エンジェルナンバー一覧（サーバー描画＝検索エンジンが読める本文） */}
+      <section className="max-w-3xl mx-auto px-4 pb-12 space-y-4">
+        <h2 className="text-xl font-bold text-gray-800">ライフパスナンバー別・守護エンジェルナンバー一覧</h2>
+        <p className="text-sm text-gray-600">
+          守護エンジェルナンバーは、生年月日から求めるライフパスナンバーに対応しています。
+          自分の数字がわからない方は、上のフォームで生年月日を入れると自動で診断できます。
         </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-8 space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">生年月日</label>
-          <input
-            type="date"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3 rounded-full hover:shadow-lg transition-all"
-        >
-          私のエンジェルナンバーを調べる 🕊️
-        </button>
-      </form>
-
-      {result && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div className={`bg-gradient-to-r ${result.angel.color} p-8 text-white text-center space-y-2`}>
-              <div className="text-sm opacity-90">あなたの守護エンジェルナンバー</div>
-              <div className="text-6xl font-bold">{result.angel.number}</div>
-              <div className="text-xl font-bold">{result.angel.title}</div>
-            </div>
-            <div className="p-6 space-y-4">
-              <p className="text-gray-700 leading-relaxed">{ai?.intro ?? result.angel.message}</p>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="bg-pink-50 rounded-xl p-4">
-                  <div className="text-xs font-bold text-pink-600 mb-1">💕 恋愛・人間関係</div>
-                  <p className="text-sm text-gray-700">{ai?.love ?? result.angel.love}</p>
-                </div>
-                <div className="bg-blue-50 rounded-xl p-4">
-                  <div className="text-xs font-bold text-blue-600 mb-1">💼 仕事・目標</div>
-                  <p className="text-sm text-gray-700">{ai?.work ?? result.angel.work}</p>
-                </div>
-                {ai && (
-                  <>
-                    <div className="bg-yellow-50 rounded-xl p-4">
-                      <div className="text-xs font-bold text-yellow-700 mb-1">💰 金運</div>
-                      <p className="text-sm text-gray-700">{ai.money}</p>
-                    </div>
-                    <div className="bg-green-50 rounded-xl p-4">
-                      <div className="text-xs font-bold text-green-700 mb-1">🌿 心身のケア</div>
-                      <p className="text-sm text-gray-700">{ai.health}</p>
-                    </div>
-                  </>
+        <div className="space-y-3">
+          {LIFE_PATHS.map((lp) => {
+            const angel = myAngelNumber(lp);
+            if (!angel) return null;
+            const ai = readings?.[angel.number];
+            const hasColumn = ["111", "222", "333", "444", "555", "666", "777", "888", "999", "1111"].includes(angel.number);
+            return (
+              <article key={lp} className="bg-white rounded-2xl shadow-sm p-5 space-y-2">
+                <h3 className="font-bold text-pink-700">
+                  ライフパス{lp}の守護エンジェルナンバーは「{angel.number}」（{angel.title}）
+                </h3>
+                <p className="text-sm text-gray-700 leading-relaxed">{ai?.intro ?? angel.message}</p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>💕 恋愛：{ai?.love ?? angel.love}</li>
+                  <li>💼 仕事：{ai?.work ?? angel.work}</li>
+                  {ai && <li>💰 金運：{ai.money}</li>}
+                </ul>
+                {hasColumn && (
+                  <Link href={`/column/angel-${angel.number}`} className="text-sm text-indigo-600 underline">
+                    {angel.number}の詳しい意味 →
+                  </Link>
                 )}
-              </div>
-              {ai && (
-                <div className="bg-fuchsia-50 rounded-xl p-4">
-                  <div className="text-xs font-bold text-fuchsia-700 mb-1">🌟 あなたへの今日の一歩</div>
-                  <p className="text-sm text-gray-700">{ai.action}</p>
-                </div>
-              )}
-              <p className="text-xs text-gray-500">
-                ※ ライフパスナンバー{result.lifePath}に対応するエンジェルナンバーです。この数字を日常で見かけたら、天使からの特別なメッセージと受け取ってください。
-              </p>
-            </div>
-          </div>
-
-          {/* 守護ストーン（アフィリエイト） */}
-          <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="font-bold text-gray-800">💎 あなたの守護ストーン</p>
-              <span className="text-xs text-gray-400 border border-gray-300 rounded px-1.5 py-0.5">PR</span>
-            </div>
-            <p className="text-sm text-gray-600">
-              エンジェルナンバー{result.angel.number}と相性の良いパワーストーンは「{(ANGEL_TO_STONE[result.angel.number] ?? "水晶").split(" ")[0]}」。
-              身につけることで天使のメッセージを受け取りやすくなるといわれています。
-            </p>
-            <a
-              href={rakutenSearchLink(ANGEL_TO_STONE[result.angel.number] ?? "パワーストーン ブレスレット")}
-              target="_blank"
-              rel="nofollow sponsored noopener"
-              className="block bg-pink-50 hover:bg-pink-100 rounded-xl p-4 transition-colors"
-            >
-              <div className="font-bold text-pink-800 text-sm">
-                {(ANGEL_TO_STONE[result.angel.number] ?? "水晶").split(" ")[0]}のブレスレットを見る（楽天市場）→
-              </div>
-            </a>
-          </div>
-
-          {/* LINE友だち追加 */}
-          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-md p-6 text-white text-center space-y-3">
-            <p className="font-bold text-lg">📱 毎朝の運勢をLINEで受け取る</p>
-            <p className="text-sm opacity-90">友だち追加すると、今日のエンジェルナンバーが毎日届きます</p>
-            <a
-              href={LINE_ADD_FRIEND_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-white text-green-600 font-bold px-8 py-3 rounded-full hover:shadow-lg hover:scale-105 transition-all"
-            >
-              LINEで友だち追加する →
-            </a>
-          </div>
-
-          {/* シェア */}
-          <div className="bg-white rounded-2xl shadow-md p-6 text-center space-y-4">
-            <p className="text-sm font-medium text-gray-700">結果をシェアする</p>
-            <div className="flex justify-center gap-3 flex-wrap">
-              <a
-                href={twitterHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-black text-white font-bold px-6 py-2 rounded-full hover:opacity-80 transition-opacity"
-              >
-                𝕏 でシェア
-              </a>
-              <button
-                onClick={() => navigator.clipboard?.writeText(`${shareText} ${shareUrl}`)}
-                className="bg-gray-100 text-gray-700 font-bold px-6 py-2 rounded-full hover:bg-gray-200 transition-colors"
-              >
-                🔗 コピー
-              </button>
-            </div>
-          </div>
-
-          {["111", "222", "333", "444", "555", "666", "777", "888", "999", "1111"].includes(result.angel.number) && (
-            <div className="text-center">
-              <Link href={`/column/angel-${result.angel.number}`} className="text-sm text-indigo-600 hover:underline">
-                {result.angel.number}の詳しい意味を読む →
-              </Link>
-            </div>
-          )}
+              </article>
+            );
+          })}
         </div>
-      )}
-
-      {!result && (
-        <section className="bg-white rounded-2xl shadow-md p-8 space-y-4">
-          <h2 className="text-lg font-bold text-gray-800">守護エンジェルナンバーとは？</h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            エンジェルナンバーは通常「ふと目にする数字」からメッセージを読み取りますが、
-            数秘術のライフパスナンバーと組み合わせることで、あなたが生まれながらに持つ
-            「守護エンジェルナンバー」を導き出せます。
-            この数字はあなたの人生のテーマと共鳴する特別な数字。
-            日常でこの数字を見かけたときは、天使があなたに強く語りかけているサインです。
-          </p>
-        </section>
-      )}
-    </div>
+      </section>
+    </>
   );
 }

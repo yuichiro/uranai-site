@@ -1,6 +1,6 @@
-// AIパーソナライズ鑑定文（scripts/generate-fortunes.mjs が public/data に生成）を
-// クライアントから読むためのヘルパー。取得失敗時は null を返し、呼び出し側は
-// 既存の固定文にフォールバックする。
+// AIパーソナライズ鑑定文の型。
+// 生成: scripts/generate-fortunes.mjs（エンジェルナンバー別）/ scripts/generate-daily-fortunes.mjs（ライフパス別・日次）
+// 読み込み: lib/serverData.ts（サーバー描画でHTMLに含める）
 
 export interface AiReading {
   intro: string;
@@ -19,33 +19,4 @@ export interface DailyFortuneText {
   money: string;
   health: string;
   action: string;
-}
-
-export async function fetchDailyFortunes(): Promise<Record<string, DailyFortuneText> | null> {
-  try {
-    const day = new Date().toISOString().slice(0, 10);
-    const res = await fetch(`/data/daily-fortunes.json?d=${day}`, { cache: "force-cache" });
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data || data.model === "stub" || !data.fortunes) return null;
-    return data.fortunes as Record<string, DailyFortuneText>;
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchAiReadings(): Promise<Record<string, AiReading> | null> {
-  try {
-    // 日付をクエリに付けて「その日のうちはキャッシュ・日が変われば最新取得」にする
-    // （生成物を更新しても古い版が居座らないようにするため）
-    const day = new Date().toISOString().slice(0, 10);
-    const res = await fetch(`/data/angel-readings.json?d=${day}`, { cache: "force-cache" });
-    if (!res.ok) return null;
-    const data = await res.json();
-    // スタブ（実生成前のプレースホルダ）は使わず、既存の固定文にフォールバックさせる
-    if (!data || data.model === "stub" || !data.readings) return null;
-    return data.readings as Record<string, AiReading>;
-  } catch {
-    return null;
-  }
 }

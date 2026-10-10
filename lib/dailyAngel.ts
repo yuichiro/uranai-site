@@ -2,8 +2,8 @@ import { ANGEL_NUMBERS, type AngelNumber } from "./angel";
 
 // その日の日付から決まる「今日のエンジェルナンバー」
 // 全ての訪問者に同じ数字が表示され、毎日変わります。
-function dateSeed(date: Date): number {
-  const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+function dateSeed(y: number, m: number, d: number): number {
+  const key = `${y}-${m}-${d}`;
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
@@ -28,10 +28,14 @@ export interface DailyAngel {
   dateLabel: string;
 }
 
-export function getDailyAngel(date: Date = new Date()): DailyAngel {
-  const s = dateSeed(date);
+// 暦日（年・月・日）から「今日のエンジェルナンバー」を決める。サーバー描画では日本時間の暦日を渡す。
+export function getDailyAngelFor(y: number, m: number, d: number): DailyAngel {
+  const s = dateSeed(y, m, d);
   const angel = ANGEL_NUMBERS[s % ANGEL_NUMBERS.length];
   const hint = DAILY_HINTS[s % DAILY_HINTS.length];
-  const dateLabel = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-  return { angel, hint, dateLabel };
+  return { angel, hint, dateLabel: `${y}年${m}月${d}日` };
+}
+
+export function getDailyAngel(date: Date = new Date()): DailyAngel {
+  return getDailyAngelFor(date.getFullYear(), date.getMonth() + 1, date.getDate());
 }
